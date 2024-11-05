@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "song-journal",
+    "song-journal": "song-journal"
+  },
+  "targets": {},
+  "etags": {}
+}
