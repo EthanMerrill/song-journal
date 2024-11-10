@@ -1,8 +1,7 @@
 import './App.css'
 
 import SongSearch from './components/songSearch'
-import { useContext, useEffect } from 'react'
-import {UserContextProvider, useUserContext} from './context/state'
+import {UserContextProvider} from './context/state'
 import AuthenticateButton from './components/authenticateButton'
 
 
