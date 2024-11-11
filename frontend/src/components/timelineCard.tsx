@@ -15,7 +15,7 @@ interface TimelineCardProps {
 
 
 export function TimelineCard(props: TimelineCardProps) {
-    const { date, journalEntry, songName } = props;
+    const { journalEntry, songName } = props;
     return (
         <Card className="w-64 text-xs justify-items-start">
             <CardHeader className="justify-start">
