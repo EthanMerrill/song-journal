@@ -21,6 +21,7 @@ export function NewSongCard() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [searchedSong, setSearchedSong] = useState<songDetails | null>(null);
   const [journalEntry, setJournalEntry] = useState<string>('');
+  const [reset, setReset] = useState(false);
 
 
   const handleDateChange = (date: Date | null) => {
@@ -59,6 +60,14 @@ export function NewSongCard() {
     setJournalEntry('');
   };
 
+  const handleReset = () => {
+    setReset(true);
+  };
+
+  const handleResetComplete = () => {
+    setReset(false);
+  };
+
 
   return (
     <Card className="w-96 right-24 top-24 absolute">
@@ -71,14 +80,15 @@ export function NewSongCard() {
       </CardHeader>
 
       <CardContent className="grid gap-4">
-        <CalendarPopover onDateChange={handleDateChange} />
-        <SongSearch onSongSearchChange={handleSongSearchChange} />
+        <CalendarPopover onDateChange={handleDateChange} resetDate={reset} onResetComplete={handleResetComplete} />
+        <SongSearch onSongSearchChange={handleSongSearchChange} reset={reset} onResetComplete={handleResetComplete} />
         <Textarea
           placeholder="Type your entry here"
           value={journalEntry}
           onChange={handleJournalEntryChange}
         />
         <Button variant="default" onClick={() => {
+
           // only save and toast if all fields are filled out
           if (!selectedDate || !searchedSong || !journalEntry) {
             toast({
@@ -89,6 +99,7 @@ export function NewSongCard() {
             return;
           }
           handleSave();
+          handleReset();
           toast({
             title: "Saved Entry!",
             description: "Your song journal entry has been saved.",

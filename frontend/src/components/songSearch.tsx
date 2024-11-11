@@ -13,10 +13,13 @@ import { songDetails } from "../types/models";
 
 interface SongSearchProps {
   onSongSearchChange: (song: songDetails | null) => void;
+  reset: boolean;
+  onResetComplete: () => void;
 }
 
 const SongSearch = (songSearch: SongSearchProps) => {
   const { spotifyToken } = useUserContext();
+  const { reset, onResetComplete } = songSearch;
   const [inputValue, setInputValue] = useState('');
   const [songs, setSongs] = useState<songDetails[]>([]);
   const [open, setOpen] = useState(false);
@@ -78,6 +81,13 @@ const SongSearch = (songSearch: SongSearchProps) => {
     setSelectedSong(song);
     setOpen(false);
   }
+
+  useEffect(() => {
+    if (reset) {
+      setInputValue('')
+      onResetComplete()
+    }
+  }, [reset, onResetComplete])
 
   return (
     <div className='w-full'>

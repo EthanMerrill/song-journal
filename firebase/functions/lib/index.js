@@ -21,7 +21,7 @@ const { onRequest } = require("firebase-functions/v2/https");
 const spotifyClientId = (0, params_1.defineSecret)("spotify_client_id");
 // define spotify client secret
 const spotifyClientSecret = (0, params_1.defineSecret)("spotify_client_secret");
-const allowedOrigins = ["song-journal-ethanmerrill-ethanmerrills-projects.vercel.app", "https://www.localhost:5173"];
+const allowedOrigins = ["song-journal-ethanmerrill-ethanmerrills-projects.vercel.app", "https://www.localhost:5173", "https://song-journal.vercel.app/"];
 exports.SpotifyAuth = onRequest({ cors: true }, (req, res) => {
     // if the origin is in the allowedOrigins array, set the Access-Control-Allow-Origin header to the origin
     if (allowedOrigins.indexOf(req.get("origin")) > -1) {

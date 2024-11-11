@@ -28,10 +28,6 @@ export function Timeline() {
     return ((dateMillis - dateRange.min) / (dateRange.max - dateRange.min)) * 90;
   };
 
-  useEffect(() => {
-    console.log("SONG ENTRIES:", songEntries);
-  }, [songEntries]);
-
 
   return (
     <div className="timeline absolute h-[90%] w-px bg-gray-300 top-[5%] left-36">

@@ -23,15 +23,14 @@ const spotifyClientId = defineSecret("spotify_client_id");
 // define spotify client secret
 const spotifyClientSecret = defineSecret("spotify_client_secret");
 
-const allowedOrigins = ["song-journal-ethanmerrill-ethanmerrills-projects.vercel.app", "https://www.localhost:5173"];
+const allowedOrigins = ["song-journal-ethanmerrill-ethanmerrills-projects.vercel.app", "https://www.localhost:5173", "https://song-journal.vercel.app/"];
 
 exports.SpotifyAuth = onRequest({cors: true}, (req: any, res: any) => {
-
   // if the origin is in the allowedOrigins array, set the Access-Control-Allow-Origin header to the origin
   if (allowedOrigins.indexOf(req.get("origin")) > -1) {
     res.set("Access-Control-Allow-Origin", req.get("origin"));
   }
-  
+
   if (req.method === "OPTIONS") {
     // Send response to OPTIONS requests
     res.set("Access-Control-Allow-Methods", "GET");

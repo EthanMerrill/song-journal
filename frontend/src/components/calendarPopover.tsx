@@ -15,26 +15,28 @@ import {
 
 interface CalendarPopoverProps {
   onDateChange: (date: Date | null) => void
+  resetDate: boolean
+  onResetComplete: () => void
 }
 
 export function CalendarPopover(calendarPopover: CalendarPopoverProps) {
+  const { resetDate, onDateChange, onResetComplete } = calendarPopover
   const [date, setDate] = useState<Date | null>()
 
   useEffect(() => {
-    console.log("DATE CHANGED", date)
-    if (date) {
-      calendarPopover.onDateChange(date)
-    } else {
-      calendarPopover.onDateChange(null)
-      setDate(null)
+    if (date !== undefined) {
+      onDateChange(date)
     }
   }, [date])
 
   useEffect(() => {
-    if (calendarPopover.onDateChange === null) {
+    console.log("resetDate", resetDate)
+    if (resetDate) {
       setDate(null)
+      onResetComplete()
     }
-  }, [calendarPopover.onDateChange])
+  }, [resetDate, onResetComplete])
+
 
   return (
     <Popover>
