@@ -1,4 +1,5 @@
 import { useState, createContext, ReactNode, useContext } from 'react';
+import { songEntry } from '../types/models';
 
 interface UserContextType {
     spotifyToken: string | null;
@@ -7,6 +8,8 @@ interface UserContextType {
     setSpotifyUserAuthCode: (code: string | null) => void;
     searchedSongId: string | null;
     setSearchedSongId: (id: string | null) => void;
+    songEntries: songEntry[] | null;
+    setSongEntries: (entries: songEntry[] | null) => void;
 }
 
 const UserContext = createContext<UserContextType | null>(null);
@@ -15,15 +18,18 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
     const [spotifyToken, setSpotifyToken] = useState<string | null>(null);
     const [spotifyUserAuthCode, setSpotifyUserAuthCode] = useState<string | null>(null);
     const [searchedSongId, setSearchedSongId] = useState<string | null>(null);
+    const [songEntries, setSongEntries] = useState<songEntry[] | null>(null);
 
     return (
-        <UserContext.Provider value={{ 
-            spotifyToken, 
-            setSpotifyToken, 
-            spotifyUserAuthCode, 
-            setSpotifyUserAuthCode, 
-            searchedSongId, 
-            setSearchedSongId 
+        <UserContext.Provider value={{
+            songEntries,
+            setSongEntries,
+            spotifyToken,
+            setSpotifyToken,
+            spotifyUserAuthCode,
+            setSpotifyUserAuthCode,
+            searchedSongId,
+            setSearchedSongId
         }}>
             {children}
         </UserContext.Provider>

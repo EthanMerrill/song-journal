@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useUserContext } from '../context/state'; 
+import { useState, useEffect } from 'react';
+import { useUserContext } from '../context/state';
 import {
   Command,
   CommandInput,
@@ -9,17 +9,26 @@ import {
   CommandItem,
   CommandSeparator,
 } from "./ui/command";
-import {Button} from "./ui/button";
+import { songDetails } from "../types/models";
 
-const SongSearch = () => {
+interface SongSearchProps {
+  onSongSearchChange: (song: songDetails | null) => void;
+}
+
+const SongSearch = (songSearch: SongSearchProps) => {
   const { spotifyToken } = useUserContext();
   const [inputValue, setInputValue] = useState('');
-  const [songs, setSongs] = useState<string[]>([]);
+  const [songs, setSongs] = useState<songDetails[]>([]);
   const [open, setOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<songDetails | null>(null);
 
   const handleSearch = async () => {
     if (!spotifyToken) {
       console.error('Spotify token is missing');
+      return;
+    }
+    if (!inputValue) {
+      console.log("input value set")
       return;
     }
 
@@ -30,7 +39,13 @@ const SongSearch = () => {
       }
     });
     const data = await response.json();
-    setSongs(data.tracks.items.map((item: any) => item.name)); // Adjust based on the actual response structure
+    setSongs(data.tracks.items.map((item: any) => ({
+      songName: item.name,
+      artistName: item.artists[0].name,
+      albumName: item.album.name,
+      spotifyUrl: item.external_urls.spotify,
+      imageUrl: item.album.images[0].url
+    })));
     setOpen(true);
   };
 
@@ -39,46 +54,56 @@ const SongSearch = () => {
       setOpen(false);
       return;
     }
+    if (selectedSong?.songName != inputValue || !selectedSong) {
 
-    const searchTimeout = setTimeout(() => {
-      console.log("searching for", inputValue);
-      handleSearch();
-    }, 900); // 900ms debounce delay
+      const searchTimeout = setTimeout(() => {
+        console.log("searching for", inputValue);
+        handleSearch();
+      }, 500); // debounce delay
 
-    // Clear the timeout if the component unmounts or inputValue changes
-    return () => {
-      clearTimeout(searchTimeout);
-    };
+      // Clear the timeout if the component unmounts or inputValue changes
+      return () => {
+        clearTimeout(searchTimeout);
+      };
+    }
   }, [inputValue]);
 
   const handleValueChange = (value: string) => {
     setInputValue(value);
   };
 
+  const handleSelect = (song: songDetails) => {
+    songSearch.onSongSearchChange(song);
+    setInputValue(song.songName);
+    setSelectedSong(song);
+    setOpen(false);
+  }
+
   return (
-    <div>
-      <Command className="flex-1 w-72">
+    <div className='w-full'>
+      <Command >
         <CommandInput
-          placeholder="Type a command or search..."
+          placeholder="Search for a song"
           value={inputValue}
           onValueChange={handleValueChange}
         />
         <CommandList>
           {open && (
-            <>
-              <CommandEmpty>No results found.</CommandEmpty>
+            <div className="absolute backdrop-blur-md bg-white/30">
+              <CommandEmpty className="">No results found.</CommandEmpty>
               <CommandGroup heading="Suggestions">
-                {songs && songs.map((song: string, index: number) => (
-                  <CommandItem key={index}>{song}</CommandItem>
+                {songs && songs.map((song: songDetails, index: number) => (
+                  <CommandItem key={index}
+                    onSelect={() => handleSelect(song)}>{song.songName + " | " + song.artistName}</CommandItem>
                 ))}
               </CommandGroup>
               <CommandSeparator />
-            </>
+            </div>
           )}
         </CommandList>
       </Command>
-      <Button className="self-start ml-2" onClick={handleSearch}>Search</Button>
     </div>
+
   );
 };
 
