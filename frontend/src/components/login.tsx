@@ -10,9 +10,10 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useUserContext } from '../context/state';
+import { app } from '../utils/firebaseInit';
 
 
-const auth = getAuth();
+const auth = getAuth(app);
 
 export default function Login() {
     const { userInfo } = useUserContext();
@@ -26,9 +27,7 @@ export default function Login() {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential: UserCredential) => {
                 // Signed in 
-                const user = userCredential.user;
-                console.log("User signed UP:", user);
-                userInfo.user = user;
+                userInfo.setUser(userCredential.user);
                 setOpen(false);
             })
             .catch((error: { code: string; message: string }) => {
@@ -40,23 +39,23 @@ export default function Login() {
                 } else {
                     setError(errorMessage.replace('Firebase: ', ''));
                 }
-            });
+            })
     }
+
 
     const handleSignIn = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential: UserCredential) => {
                 // Signed in 
-                const user = userCredential.user;
-                console.log("User signed in:", user);
+                userInfo.setUser(userCredential.user);
                 setOpen(false);
 
             })
             .catch((error: { code: string; message: string }) => {
                 setError(error.message);
-            });
+            })
+    };
 
-    }
     return (
         <div className="absolute top-5 right-5">
             <Button

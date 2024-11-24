@@ -1,7 +1,6 @@
 import { useState, createContext, ReactNode, useContext } from 'react';
 import { songEntry } from '../types/models';
-import app from '../utils/firebaseInit';
-import { getAuth, createUserWithEmailAndPassword, User } from 'firebase/auth';
+import { User } from 'firebase/auth';
 
 interface UserContextType {
     spotifyToken: string | null;
@@ -13,9 +12,8 @@ interface UserContextType {
     songEntries: songEntry[] | null;
     setSongEntries: (entries: songEntry[] | null) => void;
     userInfo: {
-        createUser: (email: string, password: string) => void;
+        setUser: (user: User | null) => void;
         user: User | null;
-        loading: boolean;
     };
 }
 
@@ -26,20 +24,14 @@ const UserContextProvider = ({ children }: { children: ReactNode }) => {
     const [spotifyUserAuthCode, setSpotifyUserAuthCode] = useState<string | null>(null);
     const [searchedSongId, setSearchedSongId] = useState<string | null>(null);
     const [songEntries, setSongEntries] = useState<songEntry[] | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-
-    const auth = getAuth(app);
-
-    const createUser = (email: string, password: string) => {
-        setLoading(true);
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
+    const [user, setUser] = useState<User | null>(null);
 
     const userInfo = {
-        createUser,
-        user: null,
-        loading,
+        setUser,
+        user,
     };
+
+
 
     return (
         <UserContext.Provider value={{
