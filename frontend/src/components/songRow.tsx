@@ -75,7 +75,7 @@ export function NewSongCard() {
         <CardTitle>Memory Playlist</CardTitle>
         {/* filler text descriptive of what a memory playlist is, ending with a call to action */}
         <CardDescription>
-          A memory playlist is a collection of songs that remind you of a specific time or place. Create a new entry to add a song to your memory playlist.
+          A memory playlist is a collection of songs that remind you of a specific time or place. Pick a song to add your first memory.
         </CardDescription>
       </CardHeader>
 
